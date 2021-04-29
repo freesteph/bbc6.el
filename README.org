@@ -1,0 +1,7 @@
+* BBC6.el
+
+For the very niche subset of Emacs users who:
+
+- are in the United Kingdom;
+- are listening to BBC6 *not* on their computer;
+- want to know what the latest track is.
