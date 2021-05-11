@@ -23,6 +23,8 @@
 ;; This mode will lookup the BBC6 website and find the latest track for you
 
 ;;; Code:
+(require 'seq)
+
 (defconst bbc6-latest-url "https://rms.api.bbc.co.uk/v2/services/bbc_6music/segments/latest?experience=domestic&offset=0&limit=1")
 
 (defun bbc6-what-track-now ()
@@ -30,12 +32,13 @@
   (interactive)
   (save-excursion
     (with-current-buffer (url-retrieve-synchronously bbc6-latest-url)
-      (let* ((payload (json-parse-buffer)))
-        (message "Currently playing on BBC6: %s" (bbc6-parse-entry payload))))))
+      (let* ((payload (json-parse-buffer))
+             (track (bbc6-parse-entry payload)))
+        (message "Currently playing on BBC6: %s" track)))))
 
 (defun bbc6-parse-entry (payload)
   "Parse a PAYLOAD from BBC6 and formats the artist and title."
-  (let* ((titles (gethash "titles" (car (gethash "data" payload))))
+  (let* ((titles (gethash "titles" (seq-first (gethash "data" payload))))
          (artist (gethash "primary" titles))
          (track  (gethash "secondary" titles)))
     (format "%s - %s" artist track)))
