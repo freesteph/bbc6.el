@@ -5,3 +5,35 @@ For the very niche subset of Emacs users who:
 - are in the United Kingdom;
 - are listening to BBC6 *not* on their computer;
 - want to know what the latest track is.
+
+* Instructions
+
+** Install the file somewhere and load it
+
+#+begin_src emacs-lisp
+(load "/path/to/bbc6.el")
+#+end_src
+
+** Get the track
+
+#+begin_src
+M-x bbc6-what-track-now
+#+end_src
+
+* Options
+
+** ~bbc6-file-record~
+
+#+begin_src emacs-lisp
+(defcustom bbc6-file-record nil
+  "If non-nil, append every successful lookup to the file along
+with the date."
+  :group 'bbc6
+  :type 'file)
+#+end_src
+
+For example:
+
+#+begin_src emacs-lisp
+(setf bbc6-file-record "~/Music/bbc6")
+#+end_src

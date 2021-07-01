@@ -27,6 +27,28 @@
 
 (defconst bbc6-latest-url "https://rms.api.bbc.co.uk/v2/services/bbc_6music/segments/latest?experience=domestic&offset=0&limit=1")
 
+(defgroup bbc6 () "Variables related to the bbc6 package."
+  :group 'convenience
+  :link '(url-link "https://github.com/freesteph/bbc6.el"))
+
+(defcustom bbc6-file-record nil
+  "If non-nil, append every successful lookup to the file along
+with the date."
+  :group 'bbc6
+  :type 'file)
+
+(defun bbc6--save-track (track)
+  "Save TRACK to the file living at `bbc6-file-record'."
+  (with-current-buffer (find-file-noselect bbc6-file-record)
+    (goto-char (point-max))
+    (newline)
+    (insert (format "%s: %s" (current-time-string) track))
+    (save-buffer)))
+
+(defun bbc6--log-track (track)
+  "Log the TRACK."
+  (message "Currently playing on BBC6: %s" track))
+
 (defun bbc6-what-track-now ()
   "Fetch and print the current track playing on BBC6."
   (interactive)
@@ -34,7 +56,9 @@
     (with-current-buffer (url-retrieve-synchronously bbc6-latest-url)
       (let* ((payload (json-parse-buffer))
              (track (bbc6-parse-entry payload)))
-        (message "Currently playing on BBC6: %s" track)))))
+        (and bbc6-file-record
+             (bbc6--save-track track))
+        (bbc6--log-track track)))))
 
 (defun bbc6-parse-entry (payload)
   "Parse a PAYLOAD from BBC6 and formats the artist and title."
