@@ -49,6 +49,14 @@ with the date."
   "Log the TRACK."
   (message "Currently playing on BBC6: %s" track))
 
+(defun bbc6-parse-entry (payload)
+  "Parse a PAYLOAD from BBC6 and formats the artist and title."
+  (let* ((titles (gethash "titles" (seq-first (gethash "data" payload))))
+         (artist (gethash "primary" titles))
+         (track  (gethash "secondary" titles)))
+    (format "%s - %s" artist track)))
+
+;;;###autoload
 (defun bbc6-what-track-now ()
   "Fetch and print the current track playing on BBC6."
   (interactive)
@@ -59,13 +67,6 @@ with the date."
         (and bbc6-file-record
              (bbc6--save-track track))
         (bbc6--log-track track)))))
-
-(defun bbc6-parse-entry (payload)
-  "Parse a PAYLOAD from BBC6 and formats the artist and title."
-  (let* ((titles (gethash "titles" (seq-first (gethash "data" payload))))
-         (artist (gethash "primary" titles))
-         (track  (gethash "secondary" titles)))
-    (format "%s - %s" artist track)))
 
 (provide 'bbc6)
 ;;; bbc6.el ends here
