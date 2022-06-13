@@ -24,6 +24,7 @@
 
 ;;; Code:
 (require 'seq)
+(require 'json)
 
 (defconst bbc6-latest-url "https://rms.api.bbc.co.uk/v2/services/bbc_6music/segments/latest?experience=domestic&offset=0&limit=1")
 
@@ -62,7 +63,7 @@ with the date."
   (interactive)
   (save-excursion
     (with-current-buffer (url-retrieve-synchronously bbc6-latest-url)
-      (let* ((payload (json-parse-buffer))
+      (let* ((payload (json-parse-string (buffer-string)))
              (track (bbc6-parse-entry payload)))
         (and bbc6-file-record
              (bbc6--save-track track))
