@@ -25,7 +25,7 @@
 ;;; Code:
 (require 'seq)
 (require 'json)
-(require 'article)
+(require 'gnus-art)
 
 (defconst bbc6-latest-url "https://rms.api.bbc.co.uk/v2/services/bbc_6music/segments/latest?experience=domestic&offset=0&limit=1")
 
